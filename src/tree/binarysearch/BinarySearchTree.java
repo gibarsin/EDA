@@ -11,7 +11,6 @@ import java.util.Objects;
 public class BinarySearchTree<T> {
     private Node<T> root;
     private Comparator<? super T> cmp;
-    private int size;
 
     public BinarySearchTree(Comparator<? super T> cmp) {
         this.cmp = cmp;
@@ -25,8 +24,7 @@ public class BinarySearchTree<T> {
 
     private Node<T> addRec(Node<T> node, T key) {
         if(node == null) {
-            size += 1;
-            return new Node(key);
+            return new Node<T>(key);
         }
         int res = cmp.compare(node.key, key);
 
@@ -53,7 +51,6 @@ public class BinarySearchTree<T> {
         } else if (res < 0) {
             node.right = removeRec(node.right, key);
         } else {
-            size--;
             if(node.left == null) {
                 node = node.right;
             } else if(node.right == null) {
@@ -223,10 +220,6 @@ public class BinarySearchTree<T> {
         }
     }
 
-    public int size() {
-        return size;
-    }
-
     public void print() {
         printRec(root);
         System.out.println("------------------------------------------");
@@ -284,16 +277,5 @@ public class BinarySearchTree<T> {
         public Node(T key) {
             this.key = key;
         }
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BinarySearchTree<?> that = (BinarySearchTree<?>) o;
-        return Objects.equals(size, that.size);
-    }
-
-    public int hashCode() {
-        return Objects.hash(size);
     }
 }
