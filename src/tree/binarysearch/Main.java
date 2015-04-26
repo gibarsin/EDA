@@ -12,6 +12,12 @@ public class Main {
                 return o1.compareTo(o2);
             }
         });
+        BinarySearchTree<Integer> tree2 = new BinarySearchTree<Integer>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
 
         tree.add("M");
         tree.add("J");
@@ -20,5 +26,11 @@ public class Main {
         tree.add("A");
 
         System.out.println(BinarySearchTree.isAVL(tree));
+
+        tree2.add(5);
+        tree2.add(2);
+        tree2.add(10);
+
+        System.out.println(BinarySearchTree.hasBranchWithSum(tree2, 12));
     }
 }

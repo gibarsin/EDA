@@ -220,6 +220,23 @@ public class BinarySearchTree<T> {
         }
     }
 
+    public static boolean hasBranchWithSum(BinarySearchTree<Integer> tree, int n) {
+        if(n < 0 || tree == null)
+            throw new IllegalArgumentException();
+        return hasBranchWithSumRec(tree.root, n, 0);
+    }
+
+    private static boolean hasBranchWithSumRec(Node<Integer> node, int n, int prevSum) {
+        if(node == null)
+            return false;
+        int currSum = node.key + prevSum;
+        if(currSum == n)
+            return node.left == null && node.right == null;
+        else if(currSum < n)
+            return hasBranchWithSumRec(node.left, n, currSum) || hasBranchWithSumRec(node.right, n, currSum);
+        return false;
+    }
+
     public void print() {
         printRec(root);
         System.out.println("------------------------------------------");
