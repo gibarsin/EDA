@@ -256,7 +256,6 @@ public class BinarySearchTree<T> {
     private static <T> int isAVLRec(Node<T> node, Comparator<? super T> cmp, T min, T max) {
         if(node == null)
             return 0;
-        System.out.println("estoy en : " + node.key);
         if(min != null && cmp.compare(node.key, min) < 0)
             return -1;
         if(max != null && cmp.compare(node.key, max) > 0)
