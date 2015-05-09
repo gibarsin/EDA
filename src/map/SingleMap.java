@@ -29,4 +29,6 @@ public interface SingleMap<K,V> {
      * Obtiene la cantidad de pares clave/valor insertados en la tabla.
      */
     public int size();
+
+    public void print();
 }

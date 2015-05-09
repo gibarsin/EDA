@@ -1,8 +1,6 @@
 package map;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 public class SingleMapClosedImpl<K,V> implements SingleMap<K,V> {
     private EntryNode<K,V>[] hashTable;
@@ -21,17 +19,50 @@ public class SingleMapClosedImpl<K,V> implements SingleMap<K,V> {
     private void resizeTable(int newSize) {
         EntryNode[] oldHashTable = hashTable;
         hashTable = new EntryNode[newSize];
+        currSize = 0; //Si no lo colocase, en la nueva tabla solo podría colocar  la mitad de los elementos de la anterior tabla y se volvería a crear una nueva
 
-        for(EntryNode<K,V> node : oldHashTable) {
-            put(node.key, node.value);
-        }
+        for(EntryNode<K,V> node : oldHashTable)
+            if(node != null && !node.removed)
+                put(node.key, node.value);
     }
 
     @Override
     public void put(K key, V value) {
-        EntryNode<K,V> node = new EntryNode<K,V>(key, value);
+        if(key == null)
+            throw new IllegalArgumentException();
+        EntryNode<K,V> curr;
+        int cutIndex = getIndex(key);
+        int currIndex = cutIndex;
+        boolean cycleComplete = false;
 
-
+        if(currSize != hashTable.length) {
+            while (!cycleComplete) { //Quizas no justifica tener un booleano ya que nunca se cumpliria la condicion, saldria antes
+                curr = hashTable[currIndex];
+                if (curr == null) {
+                    hashTable[currIndex] = new EntryNode<K, V>(key, value);
+                    currSize++;
+                    return;
+                } else if(curr.key.equals(key)) {
+                    if(curr.removed) {
+                        curr.removed = false;
+                        currSize++;
+                    }
+                    curr.value = value;
+                    return;
+                } else if (curr.removed) { //La key no es igual pero está removido
+                    hashTable[currIndex] = new EntryNode<K, V>(key, value);
+                    currSize++;
+                    return;
+                } else {
+                    currIndex = (currIndex + 1) % hashTable.length;
+                    if (currIndex == cutIndex)
+                        cycleComplete = true;
+                }
+            }
+        }
+        resizeTable(currSize * 2);
+        put(key, value);
+        currSize++;
     }
 
     @Override
@@ -44,13 +75,13 @@ public class SingleMapClosedImpl<K,V> implements SingleMap<K,V> {
 
         while(!cycleComplete) {
             node = hashTable[currIndex];
-            if(node.key.equals(key)) {
+            if(node != null && node.key.equals(key)) {
                 if(!node.removed)
                     return node.value;
                 else
                     return null;
             }
-            currIndex = (currIndex+1)%currSize;
+            currIndex = (currIndex+1)%hashTable.length;
             if(currIndex == getIndex(key))
                 cycleComplete = true;
         }
@@ -59,14 +90,35 @@ public class SingleMapClosedImpl<K,V> implements SingleMap<K,V> {
 
     @Override
     public void remove(K key) {
-        // TODO Auto-generated method stub
+        if(key == null)
+            throw new IllegalArgumentException();
+        EntryNode<K,V> node;
+        int currIndex = getIndex(key);
+        boolean cycleComplete = false;
 
+        while(!cycleComplete) {
+            node = hashTable[currIndex];
+            if(node != null && node.key.equals(key)) {
+                if(!node.removed)
+                    currSize--;
+                node.removed = true;
+                return;
+            } else {
+                currIndex = (currIndex+1)%hashTable.length;
+                if(currIndex == getIndex(key))
+                    cycleComplete = true;
+            }
+        }
     }
 
     @Override
     public Set<K> keySet() {
-        // TODO Auto-generated method stub
-        return null;
+        Set<K> keySet = new HashSet<K>();
+
+        for(EntryNode<K,V> node : hashTable)
+            if(node != null && !node.removed)
+                keySet.add(node.key);
+        return keySet;
     }
 
     @Override
@@ -74,7 +126,7 @@ public class SingleMapClosedImpl<K,V> implements SingleMap<K,V> {
         Collection<V> valuesCollection = new ArrayList<V>();
 
         for(EntryNode<K,V> node : hashTable) {
-            if(node != null)
+            if(node != null && !node.removed)
                 valuesCollection.add(node.value);
         }
         return valuesCollection;
@@ -83,6 +135,17 @@ public class SingleMapClosedImpl<K,V> implements SingleMap<K,V> {
     @Override
     public int size() {
         return currSize;
+    }
+
+    @Override
+    public void print() {
+        for(EntryNode<K,V> node : hashTable) {
+            System.out.print("NODE: " + node);
+            if(node != null) {
+                System.out.print(" \t\tKEY: " + node.key + "\t\tVALUE: " + node.value);
+            }
+            System.out.println();
+        }
     }
 
     public class EntryNode<K,V> {
@@ -96,5 +159,4 @@ public class SingleMapClosedImpl<K,V> implements SingleMap<K,V> {
             removed = false;
         }
     }
-
 }

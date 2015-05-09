@@ -44,6 +44,7 @@ public class SingleMapOpenImpl<K,V> implements SingleMap<K,V> {
     private void resizeTable(int newSize) {
         EntryNode[] oldHashTable = hashTable;
         hashTable = new EntryNode[newSize];
+        overflowZoneSize = 0;
 
         for(EntryNode<K,V> node : oldHashTable) {
             while(node != null) {
@@ -115,6 +116,16 @@ public class SingleMapOpenImpl<K,V> implements SingleMap<K,V> {
     @Override
     public int size() {
         return overflowZoneSize;
+    }
+
+    public void print() {
+        for(EntryNode<K,V> node : hashTable) {
+            System.out.print("NODE: " + node);
+            if(node != null) {
+                System.out.print("\tKEY: " + node.key + "\tVALUE: " + node.value);
+            }
+            System.out.println();
+        }
     }
 
     public class EntryNode<K,V> {
