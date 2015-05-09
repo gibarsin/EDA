@@ -1,4 +1,8 @@
-package map;
+package map.singlemap;
+
+import map.singlemap.closedhashing.SingleMapClosedImpl;
+import map.singlemap.openhashing.SingleMapOpenImpl;
+import map.singlemap.SingleMap;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,6 +27,6 @@ public class Main {
         map2.put(3, "Papa");
         map2.put(1, "Lala");
         map2.put(10, "Emm");
-        map2.print();
+        ((SingleMapClosedImpl)map2).print();
     }
 }

@@ -1,4 +1,6 @@
-package map;
+package map.singlemap.closedhashing;
+
+import map.singlemap.SingleMap;
 
 import java.util.*;
 

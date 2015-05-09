@@ -1,4 +1,6 @@
-package map;
+package map.singlemap.openhashing;
+
+import map.singlemap.SingleMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
