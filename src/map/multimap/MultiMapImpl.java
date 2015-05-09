@@ -1,7 +1,6 @@
 package map.multimap;
 
 import map.singlemap.SingleMap;
-import map.singlemap.closedhashing.SingleMapClosedImpl;
 import map.singlemap.openhashing.SingleMapOpenImpl;
 
 import java.util.Collection;
