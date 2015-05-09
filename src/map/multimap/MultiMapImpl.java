@@ -72,10 +72,11 @@ public class MultiMapImpl<K,V> implements MultiMap<K,V> {
     public void remove(K key, V value) {
         Collection<V> values = map.get(key);
 
-        if(values != null)
+        if (values != null) {
             values.remove(value);
-        if(values.isEmpty()) //Si era el último elemento de la colección
-            map.remove(key);
+            if (values.isEmpty()) //Si era el último elemento de la colección
+                map.remove(key);
+        }
     }
 
     @Override
