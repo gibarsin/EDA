@@ -3,9 +3,6 @@ package tree.b;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Gonzalo on 26/04/2015.
- */
 public class BTree<T extends Comparable<? super T>> {
     private Node root;
     private int order;
