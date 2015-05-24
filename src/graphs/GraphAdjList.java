@@ -175,7 +175,7 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
             return null;
         clearMarks();
         List<V> l = new ArrayList<V>();
-        this.DFS(node, l);
+        this.DFSIterative(node, l);
         return l;
     }
 
@@ -264,6 +264,25 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         } while (min != null);
 
         return distance; //Mapa con todos los valores y sus distancias al origen.
+    }
+
+    private void DFSIterative(Node origin, List<V> l) {
+        Node node = origin;
+        Deque<Node> stack = new LinkedList<Node>();
+
+        stack.addFirst(node);
+        while(!stack.isEmpty()) {
+            node = stack.removeFirst();
+            if(!node.visited) {
+                node.visited = true;
+                l.add(node.info);
+                for(Arc e : node.adj) {
+                    if(!e.neighbor.visited) {
+                        stack.addFirst(e.neighbor);
+                    }
+                }
+            }
+        }
     }
 
 }
