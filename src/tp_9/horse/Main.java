@@ -1,5 +1,7 @@
 package tp_9.horse;
 
+import tp_9.Board;
+
 /**
  * Created by Gonzalo on 17/06/2015.
  */

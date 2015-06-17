@@ -1,4 +1,4 @@
-package tp_9.horse;
+package tp_9;
 
 /**
  * Created by Gonzalo on 17/06/2015.

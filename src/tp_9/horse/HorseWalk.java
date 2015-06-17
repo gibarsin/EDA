@@ -1,5 +1,7 @@
 package tp_9.horse;
 
+import tp_9.Board;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
