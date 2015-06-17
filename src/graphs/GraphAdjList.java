@@ -69,7 +69,7 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         return nodes.size() == 0;
     }
 
-    public void AddVertex(V vertex) {
+    public void addVertex(V vertex) {
         if (!nodes.containsKey(vertex)) {
             Node node = new Node(vertex);
             nodes.put(vertex, node);
@@ -271,6 +271,7 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         Deque<Node> stack = new LinkedList<Node>();
 
         stack.addFirst(node);
+        clearMarks();
         while(!stack.isEmpty()) {
             node = stack.removeFirst();
             if(!node.visited) {
@@ -283,6 +284,49 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
                 }
             }
         }
+    }
+
+    public Graph<V, ArcGraph> spanningTree(V origin) {
+        if(origin == null)
+            return null;
+        Node node = nodes.get(origin);
+        if(node == null)
+            return null;
+
+        Graph<V, ArcGraph> g = new Graph<V, ArcGraph>();
+        Queue<Node> q = new LinkedList<Node>();
+
+        q.add(node);
+        g.addVertex(node.info);
+        clearMarks();
+        while(!q.isEmpty()) {
+            node = q.poll();
+            if(!node.visited) {
+                node.visited = true;
+                for(Arc e : node.adj) {
+                    if(!e.neighbor.visited) {
+                        g.addVertex(e.neighbor.info);
+                        g.addArc(node.info, e.neighbor.info, null);
+                        q.add(e.neighbor);
+                    }
+                }
+            }
+        }
+        return g;
+    }
+
+    public boolean sixGradesSeparation() {
+        for(Node node : nodeList) {
+            clearMarks();
+            if(limitBFS(node, 6) != nodeList.size())
+                return false;
+        }
+        return true;
+    }
+
+    protected int limitBFS(Node node, int depthLimit) {
+
+        return depthLimit;
     }
 
 }

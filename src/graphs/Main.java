@@ -9,22 +9,19 @@ public class Main {
 
         assert g.isEmpty();
 
-        g.AddVertex(1);
+        g.addVertex(1);
 
         assert ! g.isEmpty();
 
-        g.AddVertex(2);
-        g.AddVertex(3);
-        g.AddVertex(4);
-        g.AddVertex(5);
-        g.AddVertex(6);
-        g.AddVertex(7);
-        g.AddVertex(8);
+        g.addVertex(2);
+        g.addVertex(3);
+        g.addVertex(4);
+        g.addVertex(5);
+        g.addVertex(6);
+        g.addVertex(7);
+        g.addVertex(8);
 
         g.addArc(1, 2, new MyArc(12));
-        assert g.isBridge(1, 2);
-        assert g.isBridge(2, 1);
-
         g.addArc(1, 6, new MyArc(16));
         g.addArc(2, 3, new MyArc(23));
         g.addArc(3, 4, new MyArc(34));
@@ -67,10 +64,10 @@ public class Main {
         assert !g.cutVertex(7);
         assert !g.cutVertex(8);
 
-        g.AddVertex(9);
+        g.addVertex(9);
         assert g.connectedComponents()==2;
 
-        g.AddVertex(10);
+        g.addVertex(10);
         assert g.connectedComponents()==3;
 
         assert g.cutVertex(1);
@@ -112,6 +109,10 @@ public class Main {
         System.out.println("DFS 9: " + g.DFS(9));
         System.out.println("BFS 2:" + g.BFS(2));
         System.out.println("BFS 9:" + g.BFS(9));
+
+        System.out.println("BFS 1:" + g.spanningTree(2).BFS(2));
+
+        System.out.println(g.sixGradesSeparation());
 
 //		g.addArc(5, 7, new MyArc(57));
 //		System.out.println("DFS " + g.DFS(2));
