@@ -33,7 +33,7 @@ public class Knapsack {
 
     public int solveDP() {
         int[][] table = new int[items.size() + 1][knapsackSize + 1];
-        Item item = null;
+        Item item;
 
         for(int i = 0; i <= items.size(); i++) {
             for(int w = 0; w <= knapsackSize; w++) {
