@@ -27,7 +27,7 @@ public class Knapsack {
             return solveNaiveRec(itemIndex + 1, remainingKnapsackSize);
         } else {
             return Math.max(item.getValue() + solveNaiveRec(itemIndex + 1, remainingKnapsackSize - item.getWeight()),
-                    solveNaiveRec(itemIndex + 1, remainingKnapsackSize));
+                            solveNaiveRec(itemIndex + 1, remainingKnapsackSize));
         }
     }
 
@@ -36,17 +36,20 @@ public class Knapsack {
         Item item;
 
         for(int i = 0; i <= items.size(); i++) {
-            for(int w = 0; w <= knapsackSize; w++) {
+            table[i][0] = 0;
+        }
 
-                if(i == 0 || w == 0) {
-                    table[i][w] = 0;
-                } else {
-                    item = items.get(i-1);
-                    if(item.getWeight() <= w) { //IF IT FITS
-                        table[i][w] = Math.max(item.getValue() + table[i-1][w - item.getWeight()], table[i-1][w]); //GET THE MAX VALUE OF ADDING THIS VALUE TO THE VALUE OF
-                    } else { //ELEMENT DOESN'T FIT IN KNAPSACK
-                        table[i][w] = table[i-1][w];
-                    }
+        for(int w = 0; w <= items.size(); w++) {
+            table[0][w] = 0;
+        }
+        
+        for(int i = 1; i <= items.size(); i++) {
+            for(int w = 1; w <= knapsackSize; w++) {
+                item = items.get(i-1);
+                if(item.getWeight() <= w) { //IF IT FITS, CHECK WETHER THE VALUE IS GREATER FROM ADDING THE ELEMENT OR NOT
+                    table[i][w] = Math.max(item.getValue() + table[i-1][w - item.getWeight()], table[i-1][w]);
+                } else { //ELEMENT DOESN'T FIT IN KNAPSACK
+                    table[i][w] = table[i-1][w];
                 }
             }
         }
