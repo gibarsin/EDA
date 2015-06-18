@@ -42,7 +42,7 @@ public class Knapsack {
         for(int w = 0; w <= items.size(); w++) {
             table[0][w] = 0;
         }
-        
+
         for(int i = 1; i <= items.size(); i++) {
             for(int w = 1; w <= knapsackSize; w++) {
                 item = items.get(i-1);
