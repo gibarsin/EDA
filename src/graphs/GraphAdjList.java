@@ -11,11 +11,15 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
     protected class Node {
         public V info;
         public boolean visited;
+        public int depth;
         // coloreo, etc.
         public List<Arc> adj;
+        public int tag;
 
         public Node(V info) {
             this.info = info;
+            this.depth = 0;
+            this.tag = 0;
             this.visited = false;
             this.adj = new ArrayList<Arc>();
         }
@@ -165,8 +169,8 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
     protected void clearMarks() {
         for (Node n : getNodes()) {
             n.visited = false;
+            n.depth = 0;
         }
-
     }
 
     public List<V> DFS(V origin) {
@@ -197,16 +201,15 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
 
         Queue<Node> q = new LinkedList<Node>();
         q.add(node);
+        node.visited = true;
 
         while (!q.isEmpty()) {
             node = q.poll();
-            if (!node.visited) {
-                l.add(node.info);
-                node.visited = true;
-                for (Arc e : node.adj) {
-                    if (!e.neighbor.visited) {
-                        q.add(e.neighbor);
-                    }
+            l.add(node.info);
+            for (Arc e : node.adj) {
+                if (!e.neighbor.visited) {
+                    e.neighbor.visited = true;
+                    q.add(e.neighbor);
                 }
             }
         }
@@ -270,17 +273,16 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         Node node = origin;
         Deque<Node> stack = new LinkedList<Node>();
 
-        stack.addFirst(node);
         clearMarks();
+        stack.addFirst(node);
+        node.visited = true;
         while(!stack.isEmpty()) {
             node = stack.removeFirst();
-            if(!node.visited) {
-                node.visited = true;
-                l.add(node.info);
-                for(Arc e : node.adj) {
-                    if(!e.neighbor.visited) {
-                        stack.addFirst(e.neighbor);
-                    }
+            l.add(node.info);
+            for(Arc e : node.adj) {
+                if(!e.neighbor.visited) {
+                    stack.addFirst(e.neighbor);
+                    e.neighbor.visited = true;
                 }
             }
         }
@@ -296,19 +298,18 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         Graph<V, ArcGraph> g = new Graph<V, ArcGraph>();
         Queue<Node> q = new LinkedList<Node>();
 
+        clearMarks();
         q.add(node);
         g.addVertex(node.info);
-        clearMarks();
+        node.visited = true;
         while(!q.isEmpty()) {
             node = q.poll();
-            if(!node.visited) {
-                node.visited = true;
-                for(Arc e : node.adj) {
-                    if(!e.neighbor.visited) {
-                        g.addVertex(e.neighbor.info);
-                        g.addArc(node.info, e.neighbor.info, null);
-                        q.add(e.neighbor);
-                    }
+            for(Arc e : node.adj) {
+                if(!e.neighbor.visited) {
+                    g.addVertex(e.neighbor.info);
+                    g.addArc(node.info, e.neighbor.info, null);
+                    q.offer(e.neighbor);
+                    e.neighbor.visited = true;
                 }
             }
         }
@@ -318,15 +319,61 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
     public boolean sixGradesSeparation() {
         for(Node node : nodeList) {
             clearMarks();
-            if(limitBFS(node, 6) != nodeList.size())
+            if(!limitBFS(node, 6))
                 return false;
         }
         return true;
     }
 
-    protected int limitBFS(Node node, int depthLimit) {
+    protected boolean limitBFS(Node origin, int depth) {
+        Queue<Node> q = new LinkedList<Node>();
+        boolean maxDepthReached = false;
+        q.offer(origin);
+        origin.depth = 0;
+        origin.visited = true;
 
-        return depthLimit;
+        while(!q.isEmpty() && !maxDepthReached) {
+            Node node = q.poll();
+            if(node.depth <= depth) {
+                for(Arc e : node.adj) {
+                    if(!e.neighbor.visited) {
+                        e.neighbor.depth = node.depth + 1;
+                        e.neighbor.visited = true;
+                        q.offer(e.neighbor);
+                    }
+                }
+            } else {
+                maxDepthReached = true;
+            }
+        }
+        return q.isEmpty();
+    }
+
+    protected List<V> possibleFriends(V person, int common) {
+        Node node = nodes.get(person);
+        if(node == null)
+            return null;
+
+        List<V> l = new LinkedList<V>();
+
+        node.visited = true;    //Mark myself
+        for(Arc e : node.adj) {
+            e.neighbor.visited = true;  //Mark my friends
+        }
+        for(Arc e : node.adj) {
+            Node friend = e.neighbor;
+            for (Arc eF : friend.adj) {
+                Node possibleFriend = eF.neighbor;
+                if (!possibleFriend.visited) {  //IF has not been added and is not me and is not a friend
+                    possibleFriend.tag++;
+                    if(possibleFriend.tag >= common) {
+                        l.add(possibleFriend.info);
+                        possibleFriend.visited = true;
+                    }
+                }
+            }
+        }
+        return l;
     }
 
 }
