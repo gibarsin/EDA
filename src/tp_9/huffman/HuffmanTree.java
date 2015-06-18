@@ -12,7 +12,10 @@ import java.util.Queue;
  */
 public class HuffmanTree {
     public static BinaryTree<Integer> createTree(Map<String, Integer> frequencies) {
-        BinaryTree<Integer> t;
+        if(frequencies == null) {
+            throw new IllegalArgumentException();
+        }
+
         Queue<BinaryTree<Integer>> q = new PriorityQueue<BinaryTree<Integer>>(new Comparator<BinaryTree<Integer>>() {
             @Override
             public int compare(BinaryTree<Integer> o1, BinaryTree<Integer> o2) {
@@ -38,6 +41,4 @@ public class HuffmanTree {
 
         return null;
     }
-
-
 }
