@@ -32,22 +32,24 @@ public class Knapsack {
     }
 
     public int solveDP() {
-        int[][] table = new int[items.size()][knapsackSize];
-        Item item = null, prevItem = null;
+        int[][] table = new int[items.size() + 1][knapsackSize + 1];
+        Item item = null;
 
-        for(int i = 0; i < items.size(); i++) {
-            for(int w = 0; w < knapsackSize; w++) {
-                item = items.get(i);
+        for(int i = 0; i <= items.size(); i++) {
+            for(int w = 0; w <= knapsackSize; w++) {
+
                 if(i == 0 || w == 0) {
                     table[i][w] = 0;
-                } else if(item.getWeight() <= w) { //IF IT FITS
-                    table[i][w] = Math.max(item.getValue() + table[i - 1][w - prevItem.getWeight()], table[i - 1][w]); //GET THE MAX VALUE OF ADDING THIS VALUE TO THE VALUE OF
-                } else { //ELEMENT DOESN'T FIT IN KNAPSACK
+                } else {
+                    item = items.get(i-1);
+                    if(item.getWeight() <= w) { //IF IT FITS
+                        table[i][w] = Math.max(item.getValue() + table[i-1][w - item.getWeight()], table[i-1][w]); //GET THE MAX VALUE OF ADDING THIS VALUE TO THE VALUE OF
+                    } else { //ELEMENT DOESN'T FIT IN KNAPSACK
                         table[i][w] = table[i-1][w];
+                    }
                 }
             }
-            prevItem = item;
         }
-        return table[items.size() - 1][knapsackSize - 1];
+        return table[items.size()][knapsackSize];
     }
 }

@@ -12,7 +12,7 @@ public class Main {
 
         items.add(new Item(60, 1));
         items.add(new Item(100, 2));
-        items.add(new Item(120, 3));
+        items.add(new Item(300, 5));
 
         Knapsack knapsack = new Knapsack(items, 5);
 
