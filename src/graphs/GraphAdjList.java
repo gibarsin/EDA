@@ -417,5 +417,61 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         }
         return true;
     }
+
+    private int countCycles(V from, V to) {
+        Node fromNode = nodes.get(from);
+        Node toNode = nodes.get(to);
+
+        if(fromNode == null || toNode == null)
+            return 0;
+        return countCyclesRec(fromNode, toNode);
+    }
+
+    protected int countCyclesRec(Node curr, Node to) {
+        if(curr == to) {
+            return 1;
+        }
+        int count = 0;
+        curr.visited = true;
+
+        for(Arc e : curr.adj) {
+            if(!e.neighbor.visited) {
+                count += countCyclesRec(e.neighbor, to);
+            }
+        }
+        curr.visited = false;
+
+        return count;
+    }
+
+    public List<V> isCaterpillar() {
+        List<V> roots = new LinkedList<V>();
+
+        for(Node origin : nodeList) {
+            clearMarks();
+            if(isCaterpillarRec(origin, null)) {
+                roots.add(origin.info);
+            }
+        }
+        return roots;
+    }
+
+    private boolean isCaterpillarRec(Node curr, Node prev) {
+        boolean foundPath = false;
+
+        curr.visited = true;
+        for(Arc e : curr.adj) {
+            if(e.neighbor.visited && prev != e.neighbor) {
+                return false;
+            }
+            if(!e.neighbor.visited && e.neighbor.adj.size() > 1) {
+                if(foundPath || !isCaterpillarRec(e.neighbor, curr)) {
+                    return false;
+                }
+                foundPath = true;
+            }
+        }
+        return true;
+    }
 }
 
