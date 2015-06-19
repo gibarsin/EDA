@@ -377,5 +377,45 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         return l;
     }
 
+    protected boolean isBipartite() {
+        clearMarks();
+
+//        return isBipartiteRec(nodeList.get(0), -1);
+        return isBipartiteBFS();
+    }
+
+    private boolean isBipartiteRec(Node node, int prev) {
+        if(node.tag != 0) {
+            return node.tag != prev;
+        }
+        node.tag = -prev;
+        for(Arc e : node.adj) {
+            if(!isBipartiteRec(e.neighbor, -prev))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean isBipartiteBFS() {
+        Queue<Node> q = new LinkedList<Node>();
+        Node node = nodeList.get(0);
+
+        if(node == null)
+            return true;
+        q.offer(node);
+        node.tag = 1;
+        while(!q.isEmpty()) {
+            node = q.poll();
+            for(Arc e : node.adj) {
+                if(e.neighbor.tag == 0) {
+                    q.offer(e.neighbor);
+                    e.neighbor.tag = -node.tag;
+                } else if(e.neighbor.tag == node.tag) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
 

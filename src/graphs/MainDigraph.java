@@ -54,6 +54,5 @@ public class MainDigraph {
         passed.add("PL");
 
         System.out.println(g.unlockedCourses(passed));
-
     }
 }

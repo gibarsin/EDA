@@ -40,6 +40,8 @@ public class Main {
 
 //        System.out.println(g.possibleFriends(1,2));
         System.out.println(g.DijsktraGraph(2).BFS(2));
+        System.out.println(g.isBipartite());
+
 
     }
 }
