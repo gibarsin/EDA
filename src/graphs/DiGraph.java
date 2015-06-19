@@ -1,6 +1,7 @@
 package graphs;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class DiGraph<V, E extends ArcGraph> extends GraphAdjList<V, E> {
@@ -87,6 +88,22 @@ public class DiGraph<V, E extends ArcGraph> extends GraphAdjList<V, E> {
             return node.tag + 1;
         }
         return -1;
+    }
+
+    public List<V> unlockedCourses(List<V> passed) {
+        clearMarks();
+        List<V> unlocked = new LinkedList<V>();
+
+        for(V course : passed) {
+            Node courseNode = nodes.get(course);
+            for(Arc e : courseNode.adj) {
+                e.neighbor.tag++;
+                if(e.neighbor.tag == inDegree(e.neighbor.info)) {
+                    unlocked.add(e.neighbor.info);
+                }
+            }
+        }
+        return unlocked;
     }
 
 

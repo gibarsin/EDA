@@ -1,6 +1,9 @@
 package graphs;
 
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by Gonzalo on 18/06/2015.
  */
@@ -43,6 +46,14 @@ public class MainDigraph {
         g.addArc("CII", "PNL", new MyArc(1));
 
         System.out.println(g.minGraduationTime());
+
+        List<String> passed = new LinkedList<String>();
+
+        passed.add("EIII");
+        passed.add("CII");
+        passed.add("PL");
+
+        System.out.println(g.unlockedCourses(passed));
 
     }
 }
