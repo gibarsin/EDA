@@ -89,7 +89,7 @@ public class Graph<V, E extends ArcGraph> extends GraphAdjList<V, E> {
 
     }
 
-    public Graph<V,ArcGraph> DijsktraGraph(V origin) {
+    public Graph<V,ArcGraph> DijkstraGraph(V origin) {
         Node node = nodes.get(origin);
         if(node == null)
             return null;
@@ -98,23 +98,19 @@ public class Graph<V, E extends ArcGraph> extends GraphAdjList<V, E> {
 
         clearMarks();
         pq.offer(new PQNode(node, null, null, 0));
-        node.visited = true;
         while(!pq.isEmpty()) {
             PQNode pNode = pq.poll();
-            System.out.print("NODE: " + pNode.node.info);
-            g.addVertex(pNode.node.info);
-            if(pNode.from != null) {    //FOR FIRST CASE
-                System.out.print("\t FROM: " + pNode.from.info);
-                g.addArc(pNode.from.info, pNode.node.info, pNode.arc);
-            }
-            System.out.print("\t ARC: " + pNode.arc);
-            System.out.println("\t DISTANCE: " + pNode.distance);
-            pNode.node.visited = true;
-            pNode.node.tag = (int)pNode.distance;
-            for(Arc e : pNode.node.adj) {
-                if(!e.neighbor.visited) {
-                    pq.offer(new PQNode(e.neighbor, pNode.node, e.info, pNode.distance + e.info.getValue()));
-                    e.neighbor.visited = true;
+            if(!node.visited) {
+                g.addVertex(pNode.node.info);
+                if (pNode.from != null) {    //FOR FIRST CASE
+                    g.addArc(pNode.from.info, pNode.node.info, pNode.arc);
+                }
+                pNode.node.visited = true;
+                pNode.node.tag = (int) pNode.distance;
+                for (Arc e : pNode.node.adj) {
+                    if (!e.neighbor.visited) {
+                        pq.offer(new PQNode(e.neighbor, pNode.node, e.info, pNode.distance + e.info.getValue()));
+                    }
                 }
             }
         }
