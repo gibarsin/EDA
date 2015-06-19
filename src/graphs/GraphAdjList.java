@@ -170,6 +170,7 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
         for (Node n : getNodes()) {
             n.visited = false;
             n.depth = 0;
+            n.tag = 0;
         }
     }
 

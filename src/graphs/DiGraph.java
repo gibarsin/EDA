@@ -1,5 +1,8 @@
 package graphs;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class DiGraph<V, E extends ArcGraph> extends GraphAdjList<V, E> {
 
     public int inDegree(V v) {
@@ -61,6 +64,29 @@ public class DiGraph<V, E extends ArcGraph> extends GraphAdjList<V, E> {
             }
         }
         return count + 1;
+    }
+
+    public int minGraduationTime() {
+        Queue<Node> q = new LinkedList<Node>();
+        Node node = null;
+
+        for(Node starter : nodeList) {
+            if(inDegree(starter.info) == 0) {
+                q.offer(starter);
+            }
+        }
+        clearMarks();
+        while(!q.isEmpty()) {
+            node = q.poll();
+            for(Arc e : node.adj) {
+                e.neighbor.tag = (int) Math.max(e.neighbor.tag, node.tag + e.info.getValue());
+                q.offer(e.neighbor);
+            }
+        }
+        if (node != null) {
+            return node.tag + 1;
+        }
+        return -1;
     }
 
 
