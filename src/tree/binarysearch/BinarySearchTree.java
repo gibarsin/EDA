@@ -5,7 +5,6 @@ import tree.binary.BinaryTree;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class BinarySearchTree<T> {
@@ -203,20 +202,20 @@ public class BinarySearchTree<T> {
         }
     }
 
-    public void invertList() {
+    public void invertTree() {
         cmp = cmp.reversed();
 
-        invertListRec(root);
+        invertTreeRec(root);
     }
 
-    private void invertListRec(Node<T> node) {
+    private void invertTreeRec(Node<T> node) {
         if(node != null) {
             Node<T> aux = node.left;
             node.left = node.right;
             node.right = aux;
 
-            invertListRec(node.left);
-            invertListRec(node.right);
+            invertTreeRec(node.left);
+            invertTreeRec(node.right);
         }
     }
 

@@ -26,12 +26,12 @@ public class Radix2 {
                 int number = list.get(i);
                 digits[(number/divisor) % 10].add(number);
             }
-            divisor *= 10;
             for(int i=0, j=0; i < digits.length; i++) {
                 while(!digits[i].isEmpty()) { //Vacio las listas y rearmo la lista segun el digitIndex que use para ordenar
                     list.set(j++, digits[i].remove());
                 }
             }
+            divisor *= 10;
         }
     }
 }

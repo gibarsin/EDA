@@ -53,6 +53,7 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
     protected class Arc {
         public E info;
         public Node neighbor;
+        public boolean visited;
 
         public Arc(E info, Node neighbor) {
             super();
@@ -171,6 +172,9 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
             n.visited = false;
             n.depth = 0;
             n.tag = 0;
+            for(Arc e : n.adj) {
+                e.visited = false;
+            }
         }
     }
 
@@ -470,6 +474,63 @@ public abstract class GraphAdjList<V, E extends ArcGraph> {
                 }
                 foundPath = true;
             }
+        }
+        return true;
+    }
+
+    public double maxDistance(V origin, V to) {
+        Node node = nodes.get(origin);
+        if(origin == null)
+            return -1;
+        clearMarks();
+        return maxDistanceRec(node, to, 0, -1);
+    }
+
+    protected double maxDistanceRec(Node node, V to, double currWeight, double maxWeight) {
+        if(node.info.equals(to))
+            return currWeight > maxWeight ? currWeight : maxWeight;
+        node.visited = true;
+        for(Arc e : node.adj) {
+            if(!e.neighbor.visited) {
+                maxWeight = maxDistanceRec(e.neighbor, to, currWeight + e.info.getValue(), maxWeight);
+            }
+        }
+        node.visited = false;
+        return maxWeight;
+    }
+
+    protected boolean isDFS(List<V> values) {
+        if(values == null)
+            throw new IllegalArgumentException();
+        if(values.size() != nodeList.size())
+            return false;
+        clearMarks();
+        return isDFSRec(values, 0, nodes.get(values.get(0)));
+    }
+
+    private boolean isDFSRec(List<V> values, int index, Node node) {
+        if(index == values.size())
+            return true;
+        System.out.println("INDEX: " + index);
+        System.out.println("NODE: " + node.info + "\t VALUE: " + values.get(index));
+        if(values.get(index).equals(node.info)) {
+            if(node.visited) {
+                return false;
+            }
+            node.visited = true;
+            for(Arc e : node.adj) {
+                if(isDFSRec(values, index + 1, e.neighbor)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean nodesHaveEvenEdges() {
+        for(Node node : nodeList) {
+            if(node.adj.size() % 2 != 0)
+                return false;
         }
         return true;
     }
